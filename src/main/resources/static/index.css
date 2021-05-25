@@ -1,0 +1,54 @@
+.header{
+    margin-left:50px;
+    margin-right:50px;
+    /*margin-top:200px;*/
+}
+.dcdImg{
+    position:absolute;
+    left: 50px;
+    top: 0;
+    width: 246px;
+    height: 100px;
+}
+.input-div{
+    margin-left: 260px;
+    border-radius: 2px;
+    position: relative;
+    background-color: rgb(255, 255, 255);
+    width: 400px;
+    margin-top: 25px;
+    border: 2px solid rgb(255, 204, 50);
+    height: 36px;
+}
+.input{
+    width: 284px;
+    height: 36px;
+    line-height: 12px;
+    padding: 0px 10px;
+    outline: 0px;
+    border: 0px;
+    font-size: 12px;
+    box-sizing: border-box;
+    appearance: none;
+    float: left;
+}
+.button{
+    line-height: 36px;
+    font-size: 14px;
+    border: 0px;
+    background-color: rgb(255, 204, 50);
+    cursor: pointer;
+    outline: none;
+    float: right;
+    width: 80px;
+    border-radius: 0px;
+}
+.black-bar {
+    background-color: #15361b;
+    height: 27px;
+    line-height: 48px;
+    border-radius: 4px;
+    width: 1000px;
+    padding-left: 100px;
+    margin-top: 8px;
+}

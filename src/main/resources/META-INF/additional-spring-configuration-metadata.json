@@ -1,0 +1,39 @@
+{
+  "properties": [
+    {
+      "name": "elasticsearch",
+      "type": "java.lang.String",
+      "description": "Description for elasticsearch."
+    },
+    {
+      "name": "spring.data.elasticsearch",
+      "type": "java.lang.String",
+      "description": "Description for spring.data.elasticsearch."
+    },
+    {
+      "name": "jdbc.driver",
+      "type": "java.lang.String",
+      "description": "Description for jdbc.driver."
+    },
+    {
+      "name": "jdbc.url",
+      "type": "java.lang.String",
+      "description": "Description for jdbc.url."
+    },
+    {
+      "name": "jdbc.database-name",
+      "type": "java.lang.String",
+      "description": "Description for jdbc.database-name."
+    },
+    {
+      "name": "jdbc.username",
+      "type": "java.lang.String",
+      "description": "Description for jdbc.username."
+    },
+    {
+      "name": "jdbc.password",
+      "type": "java.lang.String",
+      "description": "Description for jdbc.password."
+    }
+  ]
+}

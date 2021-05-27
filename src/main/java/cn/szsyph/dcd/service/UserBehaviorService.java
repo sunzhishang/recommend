@@ -5,13 +5,11 @@ import cn.szsyph.dcd.enums.UserBehaviorEnum;
 import cn.szsyph.dcd.repository.dao.UserClickDao;
 import cn.szsyph.dcd.repository.dao.UserGradeDao;
 import cn.szsyph.dcd.repository.dao.UserPinDao;
-import cn.szsyph.dcd.repository.domain.ArticleES;
-import cn.szsyph.dcd.repository.domain.UserClick;
-import cn.szsyph.dcd.repository.domain.UserGrade;
-import cn.szsyph.dcd.repository.domain.UserPin;
+import cn.szsyph.dcd.repository.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,6 +17,9 @@ public class UserBehaviorService {
 
     @Autowired
     private UserPreferenceService userPreferenceService;
+
+    @Autowired
+    private ArticleService articleService;
 
     @Autowired
     private UserPinDao userPinDao;
@@ -65,7 +66,7 @@ public class UserBehaviorService {
         for (int i = 0; i < articleIdList.size(); i++) {
             int searchRanking = searchOffset + i + 1;
             double score = 5 / (double) searchRanking;
-            recommendRankingArticleService.pushRanking(articleIdList.get(i).getId(),score);
+            recommendRankingArticleService.pushRanking(articleIdList.get(i).getId(), score);
             if (userId != 0) {
                 userPreferenceService.saveOrUpdateUserPreference(userId, articleIdList.get(i).getId(), score);
             }
@@ -73,6 +74,32 @@ public class UserBehaviorService {
     }
 
 
+    public List<Article> getPinedArticleByUserId(long userId) {
+        List<UserPin> byUserId = userPinDao.findByUserId(userId);
+        List<Long> articleIds = new ArrayList<>();
+        for (UserPin userPin : byUserId) {
+            articleIds.add(userPin.getArticleId());
+        }
+        return articleService.getArticleByIds(articleIds);
+    }
+
+    public List<Article> getGradedArticleByUserId(long userId) {
+        List<UserGrade> byUserId = userGradeDao.findByUserId(userId);
+        List<Long> articleIds = new ArrayList<>();
+        for (UserGrade userGrade : byUserId) {
+            articleIds.add(userGrade.getArticleId());
+        }
+        return articleService.getArticleByIds(articleIds);
+    }
+
+    public List<Article> getClickedArticleByUserId(long userId) {
+        List<UserClick> byUserId = userClickDao.findByUserId(userId);
+        List<Long> articleIds = new ArrayList<>();
+        for (UserClick userClick : byUserId) {
+            articleIds.add(userClick.getArticleId());
+        }
+        return articleService.getArticleByIds(articleIds);
+    }
 
 
 }

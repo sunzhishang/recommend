@@ -36,4 +36,5 @@ public class UserPin implements Serializable {
     @Column(name = "modify_time")
     @Generated(GenerationTime.ALWAYS)
     private Timestamp modify_time;
+
 }

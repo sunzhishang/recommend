@@ -4,65 +4,74 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" type="text/css" href="index.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
     <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <script src="script/render.js"></script>
     <script>
 
         $(document).ready(function () {
-            $(".button").click(function () {
+
+            $("#search-button").click(function () {
                 $("#list").empty();
-                retrieveArticles()
+                let pageNo = 0;
+                retrieveArticles(pageNo)
             });
-            $("#input").keypress(function (even) {
-                if (even.which == 13) {
+            $("#search-input").keypress(function (even) {
+                if (even.which === 13) {
                     $("#list").empty();
-                    retrieveArticles()
+                    let pageNo = 0;
+                    retrieveArticles(pageNo);
+                }
+            });
+
+
+            let pageNo = 0;
+            getRecommendation(pageNo);
+            $(window).on("scroll",function(){
+                let windowHeight = $(window).height();//当前窗口的高度
+                let scrollTop = $(window).scrollTop();//当前滚动条从上往下滚动的距离
+                let docHeight = $(document).height(); //当前文档的高度
+                if (scrollTop + windowHeight >= docHeight) {
+                    console.log("===加载更多数据===");
+                    pageNo++;
+                    getRecommendation(pageNo)
                 }
             });
         });
     </script>
     <script>
-        function retrieveArticles() {
-            var keywords = $(".input").val();
-            var id = 0
-            var title = ""
-            var imageUrl = ""
-            console.log(keywords)
-            //发送ajax请求
-            $.get('/motor/search', {
-                "keywords": keywords
-            }, function (list) {
-                console.log(list)
-                for (var i = 0; i < list.length; i++) {
-                    id = list[i].id
-                    title = list[i].title
-                    imageUrl = list[i].image
-                    articleStr = ' <a class="article" href="https://www.dongchedi.com/article/' + id + '"' +
-                        'style="display: flex;-webkit-box-align: center;' +
-                        '    align-items: center;-webkit-box-pack: justify;justify-content: space-between;width: 70%;height: 124px;padding: 12px 0px;' +
-                        '    cursor: pointer;background-color: rgb(255, 255, 255);border-bottom: 1px solid rgb(230, 230, 230);margin-left: 200px;margin-top: 20px;text-decoration: none">' +
-                        '        <div class="imgDiv" style="position: relative;width: 150px;height: 100px;margin-right: 16px;">' +
-                        '            <img style="width: 150px;height: 100px;"' +
-                        '                src="' + imageUrl + '"' + '/>' +
-                        '       </div>' +
-                        '        <div class="titleDiv" style="flex-grow: 1;flex-shrink: 1;flex-basis: 0%;display: block; color: #1a1a1a; font-family: PingFang SC,Hiragino Sans GB,Microsoft YaHei,Helvetica,Arial; font-size: 20px;">' +
-                        title +
-                        '        </div>' +
-                        '    </a>'
-                    $("#list").append(articleStr);
+
+        function getRecommendation(pageNo) {
+            $.get('/motor/recommend/home', {
+                "pageNo": pageNo,
+                "pageSize": 10,
+            }, function (resp) {
+                if (resp.data != null){
+                    if (resp.data.userBasedRecommendation != null){
+                        renderList(resp.data.userBasedRecommendation)
+                    }
+                    if (resp.data.hotRecommendation != null){
+                        renderList(resp.data.hotRecommendation)
+                    }
                 }
             })
         }
+
+
     </script>
 </head>
 <body>
 <div class="header">
-    <img class="dcdImg"
-         src="https://sf6-scmcdn2-tos.pstatp.com/motor/pc/_next/static/images/newLogo-8c7aebe79e84eec350e29ac0b830bfea.png"/>
-    <div class="input-div" >
-        <input id="input" class="input" placeholder="请输入你要搜索的内容">
-        <button id="search" class="button">搜索</button>
+    <img class="dcdImg" alt="网络出错了"
+         src="imgs/dcd.png"/>
+    <div class="input-div">
+        <input id="search-input" class="input" placeholder="请输入你要搜索的内容">
+        <button id="search-button" class="button">搜索</button>
     </div>
-    <div class="black-bar"></div>
+    <div class="black-bar">
+        <a class="homeTab" href="index.html">推荐</a>
+        <a class="myTab" href="my.html">我的</a>
+    </div>
 </div>
 <div class="body" id="list">
 

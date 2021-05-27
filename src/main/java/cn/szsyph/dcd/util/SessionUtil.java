@@ -12,7 +12,6 @@ import javax.servlet.http.HttpSession;
 /**
  * @Description session相关操作
  * @Author sunzhishang
- * @Date 2019/4/3 16:26
  **/
 @Slf4j
 @Service
@@ -32,12 +31,12 @@ public class SessionUtil {
      * 获取用户基本信息
      */
     public User getUser(HttpServletRequest request) {
-//        HttpSession session = request.getSession();
-//        Object user_id = session.getAttribute("user_id");
-//        if (user_id == null) {
-//            return new User();
-//        }
-//        return userService.getUserById((Long) (user_id));
-        return new User(4, "sunzhishang", "123456");
+        HttpSession session = request.getSession();
+        Object user_id = session.getAttribute("user_id");
+        if (user_id == null) {
+            return new User();
+        }
+        return userService.getUserById((Long) (user_id));
+//        return new User(4, "sunzhishang", "123456");
     }
 }

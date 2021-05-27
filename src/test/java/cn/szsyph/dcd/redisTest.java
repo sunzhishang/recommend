@@ -36,32 +36,27 @@ public class redisTest extends DcdApplicationTest {
 
     @Test
     public void TestRedisSet() {
-        recommendRankingArticleService.pushRanking(1,100);
+        recommendRankingArticleService.pushRanking(1, 100);
     }
 
-    @Test
-    public void TestRedisGet(){
-        recommendRankingArticleService.getTopN(1);
-    }
 
     @Test
-    public void TestFather(){
+    public void TestFather() {
         child1 a = new child1();
         System.out.println(a.test);
         a.test();
     }
 
 
-
     @Test
-    public void Mysql2Redis(){
+    public void Mysql2Redis() {
         List<Article> all = articleDao.findAll();
         Random random = new Random();
         for (int i = 0; i < 1000; i++) {
             int userId = random.nextInt(9) + 1;
             int articleIdx = random.nextInt(all.size());
             double preference = random.nextDouble() * 10;
-            UserPreference userPreference = new UserPreference(userId, all.get(articleIdx).getId(),preference);
+            UserPreference userPreference = new UserPreference(userId, all.get(articleIdx).getId(), preference);
             userPreferenceDao.save(userPreference);
         }
     }

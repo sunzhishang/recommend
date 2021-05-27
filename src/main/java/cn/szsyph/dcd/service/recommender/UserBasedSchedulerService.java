@@ -1,9 +1,9 @@
 package cn.szsyph.dcd.service.recommender;
 
 import cn.szsyph.dcd.repository.domain.Article;
+import cn.szsyph.dcd.repository.domain.ArticleApi;
 import cn.szsyph.dcd.service.ArticleService;
 import org.apache.mahout.cf.taste.common.TasteException;
-import org.apache.mahout.cf.taste.recommender.RecommendedItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Async;

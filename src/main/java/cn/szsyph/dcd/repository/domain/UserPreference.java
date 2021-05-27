@@ -38,4 +38,5 @@ public class UserPreference implements Serializable {
     @Column(name = "preference")
     private double preference;
 
+
 }

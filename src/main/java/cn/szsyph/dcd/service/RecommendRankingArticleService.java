@@ -21,11 +21,11 @@ public class RecommendRankingArticleService {
         stringRedisTemplate.boundZSetOps(ArticleRankingKey).incrementScore(Long.toString(articleId), score);
     }
 
-    public List<Long> getTopN(int topN) {
-        if (topN < 1){
+    public List<Long> getArticles(int pageNo, int pageSize) {
+        if (pageSize < 1) {
             return null;
         }
-        Set<String> articleIdStrTopN = stringRedisTemplate.boundZSetOps(ArticleRankingKey).reverseRange(0, topN - 1);
+        Set<String> articleIdStrTopN = stringRedisTemplate.boundZSetOps(ArticleRankingKey).reverseRange(pageNo * pageSize, (pageNo + 1) * pageSize);
         if (articleIdStrTopN == null) {
             return null;
         }

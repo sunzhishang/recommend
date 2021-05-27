@@ -7,10 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -36,4 +33,5 @@ public class UserGrade implements Serializable {
     @Column(name = "modify_time")
     @Generated(GenerationTime.ALWAYS)
     private Timestamp modifyTime;
+
 }

@@ -1,8 +1,10 @@
 package cn.szsyph.dcd.service.ESService;
 
 
+import cn.szsyph.dcd.repository.domain.Article;
 import cn.szsyph.dcd.repository.domain.ArticleES;
 import cn.szsyph.dcd.repository.dao.ArticleESDao;
+import cn.szsyph.dcd.repository.domain.ArticleApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.SearchHit;
@@ -36,12 +38,11 @@ public class ArticleESService {
 
     public List<ArticleES> search(String keywords, int pageNo, int pageSize) {
         List<ArticleES> articles = new ArrayList<>();
-        ArticleES article = null;
         List<SearchHit<ArticleES>> hits = articleESDao.findByTitle(keywords, PageRequest.of(pageNo, pageSize));
         for (SearchHit<ArticleES> hit : hits) {
-            article = hit.getContent();
-            article.setTitle(hit.getHighlightField("title").get(0));
-            articles.add(article);
+            ArticleES content = hit.getContent();
+            content.setTitle(hit.getHighlightField("title").get(0));
+            articles.add(content);
         }
         return articles;
     }

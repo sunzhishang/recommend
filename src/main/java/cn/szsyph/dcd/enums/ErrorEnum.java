@@ -26,12 +26,14 @@ public enum ErrorEnum {
     SESSION_DATA_IS_NULL(4000, "Session数据为空"),
 
 
-    CHAT_INSERT_ERROR(5000, "消息写入数据库失败"),
+    NO_USER(5000, "用户未登陆"),
+    PASSWORD_ERROR(5001, "用户密码错误"),
 
 
     COMMENT_INSERT_ERROR(6000, "添加评论失败"),
     FAILED_TO_INSERT_SHOPPING_CART(6001, "添加购物车失败"),
-    NO_GOODS(6002, "商品不存在");
+    NO_GOODS(6002, "商品不存在"),
+    ;
 
     private final Integer code;
 

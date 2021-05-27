@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+          integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <script src="script/render.js"></script>
+    <script>
+        $(document).ready(function () {
+
+
+            $("#search-button").click(function () {
+                $("#list").empty();
+                let pageNo = 0;
+                retrieveArticles(pageNo)
+            });
+            $("#search-input").keypress(function (even) {
+                if (even.which === 13) {
+                    $("#list").empty();
+                    let pageNo = 0;
+                    retrieveArticles(pageNo);
+                }
+            });
+
+
+
+            $.post('/motor/user/is_login', {}, function (resp) {
+                if (resp.data.is_login === true) {
+                    $(".mainTab").css("display", "block")
+                    $(".login-input").css("display", "none")
+                }
+            })
+        });
+    </script>
+    <script>
+        function login() {
+            $.ajax({
+                type: 'POST',
+                url: "/motor/user/login",
+                data: JSON.stringify({
+                    'username': $("#username").val(),
+                    'password': $("#password").val()
+                }),
+                contentType: "application/json; charset=utf-8",    //> 这里和headers中Content-Type相同作用
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                success: function (resp) {
+                    if (resp.code === 5001) {
+                        alert(resp.data.message);
+                    } else {
+                        alert("登陆成功");
+                        $(".mainTab").css("display", "block");
+                        $(".login-input").css("display", "none");
+                    }
+                }
+            });
+        }
+    </script>
+
+
+    <script>
+        function myClick() {
+            $(".active").removeClass("active")
+            $("#clickTab").addClass("active")
+            $.ajax({
+                type: 'get',
+                url: "/motor/user/click",
+                success: function (resp) {
+                    if (resp.code === 5000) {
+                        alert(resp.data.msg);
+                    } else {
+                        $("#list").empty()
+                        renderList(resp.data)
+                    }
+                }
+            });
+        }
+
+        function myPin() {
+            $(".active").removeClass("active")
+            $("#pinTab").addClass("active")
+            $.ajax({
+                type: 'get',
+                url: "/motor/user/pin",
+                success: function (resp) {
+                    if (resp.code === 5000) {
+                        alert(resp.data.msg);
+                    } else {
+                        $("#list").empty()
+                        renderList(resp.data)
+                    }
+                }
+            });
+        }
+
+        function myGrade() {
+            $(".active").removeClass("active")
+            $("#gradeTab").addClass("active")
+            $.ajax({
+                type: 'get',
+                url: "/motor/user/grade",
+                success: function (resp) {
+                    if (resp.code === 5000) {
+                        alert(resp.data.msg);
+                    } else {
+                        $("#list").empty()
+                        renderList(resp.data)
+                    }
+                }
+            });
+        }
+    </script>
+
+</head>
+<body>
+<div class="header">
+    <img class="dcdImg" alt="网络出错了"
+         src="https://sf6-scmcdn2-tos.pstatp.com/motor/pc/_next/static/images/newLogo-8c7aebe79e84eec350e29ac0b830bfea.png"/>
+    <div class="input-div">
+        <input id="input" class="input" placeholder="请输入你要搜索的内容">
+        <button id="search" class="button">搜索</button>
+    </div>
+    <div class="black-bar">
+        <a class="homeTab" href="index.html">推荐</a>
+        <a class="myTab" href="my.html">我的</a>
+    </div>
+
+</div>
+<div style="display: flex">
+    <div class="login-input" style="display: flex">
+        <input id="username" placeholder="用户名" style="width: 100%">
+        <input id="password" placeholder="密码" type="password">
+        <button onclick="login()">登陆</button>
+    </div>
+    <div class="mainTab" style="display: none">
+        <div class="nav-bar">
+            <ul class="nav nav-pills nav-stacked">
+                <li role="presentation" id="pinTab" class="active"><a href="#" onclick="myPin()">我的收藏</a></li>
+                <li role="presentation" id="gradeTab"><a href="#" onclick="myGrade()">我的评分</a></li>
+                <li role="presentation" id="clickTab"><a href="#" onclick="myClick()">我的浏览记录</a></li>
+            </ul>
+        </div>
+        <div id="list">
+
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

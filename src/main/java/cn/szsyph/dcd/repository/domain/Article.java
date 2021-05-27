@@ -3,7 +3,9 @@ package cn.szsyph.dcd.repository.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -21,7 +23,7 @@ public class Article implements Serializable {
     private static final long serialVersionUID = -7962457506351103183L;
 
     @Id
-    private long Id;
+    private long id;
 
     @Column(name = "title")
     private String title;
@@ -31,7 +33,4 @@ public class Article implements Serializable {
 
     @Column(name = "content")
     private String content;
-
-    @Column(name = "is_video")
-    private boolean isVideo;
 }

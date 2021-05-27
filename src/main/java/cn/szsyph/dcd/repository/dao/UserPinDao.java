@@ -12,5 +12,8 @@ import java.util.List;
  */
 
 public interface UserPinDao extends org.springframework.data.jpa.repository.JpaRepository<UserPin, Long> {
+
     List<UserPin> findByUserId(long userId);
+
+    UserPin findByUserIdAndArticleId(long userId, long articleId);
 }

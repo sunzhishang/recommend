@@ -57,10 +57,8 @@ public class UserController {
             throw new BusinessException(ErrorEnum.PARAM_IS_NULL);
         }
         User user = userService.getUserByUserNameAndPassword(username, password);
-        if (user.getId() == 0) {
-            Map<String, Object> result = new HashMap<>();
-            result.put("message", "密码错误");
-            return ResultUtil.success(result);
+        if (user == null || user.getId() == 0) {
+            return ResultUtil.success(ErrorEnum.NO_USER);
         } else {
             // 写入用户id
             SessionUtil.putUserId(request, user.getId());
@@ -68,11 +66,23 @@ public class UserController {
         }
     }
 
+    @PostMapping(value = "/is_login")
+    public ResultVo isLogin(HttpServletRequest request) {
+        User user = sessionUtil.getUser(request);
+        Map<String, Object> result = new HashMap<>();
+        if (user.getId() != 0) {
+            result.put("is_login", true);
+        }
+        result.put("is_login", false);
+        return ResultUtil.success(result);
+    }
+
     /**
      * 注冊用戶
      */
     @PostMapping(value = "/register")
     public ResultVo register(@RequestBody User user) {
+
         log.info("UserController#register: param info. user={}", user);
         if (user == null) {
             log.error("UserController#register: param is null. user={}", user);
@@ -82,15 +92,31 @@ public class UserController {
         return ResultUtil.success();
     }
 
-    @GetMapping(value = "/history")
-    public ResultVo history(
-            @RequestParam(name = "type") Integer behavior,
-            HttpServletRequest request) {
+    @GetMapping(value = "/click")
+    public ResultVo click(HttpServletRequest request) {
         User user = sessionUtil.getUser(request);
         if (user.getId() == 0) {
             return ResultUtil.error(ErrorEnum.NO_USER);
         }
-        return ResultUtil.success();
+
+        return ResultUtil.success(userBehaviorService.getClickedArticleByUserId(user.getId()));
     }
 
+    @GetMapping(value = "/pin")
+    public ResultVo pin(HttpServletRequest request) {
+        User user = sessionUtil.getUser(request);
+        if (user.getId() == 0) {
+            return ResultUtil.error(ErrorEnum.NO_USER);
+        }
+        return ResultUtil.success(userBehaviorService.getPinedArticleByUserId(user.getId()));
+    }
+
+    @GetMapping(value = "/grade")
+    public ResultVo grade(HttpServletRequest request) {
+        User user = sessionUtil.getUser(request);
+        if (user.getId() == 0) {
+            return ResultUtil.error(ErrorEnum.NO_USER);
+        }
+        return ResultUtil.success(userBehaviorService.getGradedArticleByUserId(user.getId()));
+    }
 }

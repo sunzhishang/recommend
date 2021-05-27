@@ -3,7 +3,11 @@ package cn.szsyph.dcd.controller;
 import cn.szsyph.dcd.common.ResultUtil;
 import cn.szsyph.dcd.common.ResultVo;
 import cn.szsyph.dcd.constant.Constant;
+import cn.szsyph.dcd.repository.domain.Article;
+import cn.szsyph.dcd.repository.domain.ArticleApi;
 import cn.szsyph.dcd.repository.domain.User;
+import cn.szsyph.dcd.repository.domain.UserPin;
+import cn.szsyph.dcd.service.UserPinService;
 import cn.szsyph.dcd.service.recommender.HotRecommenderService;
 import cn.szsyph.dcd.service.recommender.ItemBasedSchedulerService;
 import cn.szsyph.dcd.service.recommender.UserBasedSchedulerService;
@@ -14,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -37,13 +43,54 @@ public class RecommendController {
     @Autowired
     private HotRecommenderService hotRecommenderService;
 
+    @Autowired
+    private UserPinService userPinService;
+
     /**
      * 获取首页数据
      */
     @GetMapping(value = {"/home"})
-    public ResultVo home(HttpServletRequest request) throws TasteException {
+    public ResultVo home(
+            @RequestParam(value = "pageNo") int pageNo,
+            @RequestParam(value = "pageSize") int pageSize,
+            HttpServletRequest request) throws TasteException {
         User user = sessionUtil.getUser(request);
-        HomePageVo result = new HomePageVo(itemBasedSchedulerService.recommend(user.getId(), Constant.DEFAULT_RECOMMEND_NUM), userBasedSchedulerService.recommend(user.getId(), Constant.DEFAULT_RECOMMEND_NUM), hotRecommenderService.recommend(user.getId(), Constant.DEFAULT_RECOMMEND_NUM));
+        List<ArticleApi> userBasedApis = new ArrayList<>();
+        List<ArticleApi> hotApis = new ArrayList<>();
+
+        List<Article> userBasedRecommends = userBasedSchedulerService.recommend(user.getId(), pageSize);
+        if (userBasedRecommends != null) {
+            for (Article userBasedRecommend : userBasedRecommends) {
+                ArticleApi articleApi = new ArticleApi(userBasedRecommend);
+                articleApi.setIdStr(Long.toString(userBasedRecommend.getId()));
+                if (user.getId() != 0) {
+                    UserPin userPinByUserIdAndArticleId = userPinService.getUserPinByUserIdAndArticleId(user.getId(), articleApi.getId());
+                    if (userPinByUserIdAndArticleId.getArticleId() != 0) {
+                        articleApi.setPined(true);
+                    }
+                }
+                userBasedApis.add(articleApi);
+            }
+        }
+
+
+        List<Article> hotRecommends = hotRecommenderService.recommend(user.getId(), pageNo, pageSize);
+        if (hotRecommends != null) {
+            for (Article hotRecommend : hotRecommends) {
+                ArticleApi articleApi = new ArticleApi(hotRecommend);
+                articleApi.setIdStr(Long.toString(hotRecommend.getId()));
+                if (user.getId() != 0) {
+                    UserPin userPinByUserIdAndArticleId = userPinService.getUserPinByUserIdAndArticleId(user.getId(), articleApi.getId());
+                    if (userPinByUserIdAndArticleId.getArticleId() != 0) {
+                        articleApi.setPined(true);
+                    }
+                }
+                hotApis.add(articleApi);
+            }
+        }
+
+
+        HomePageVo result = new HomePageVo(null, userBasedApis, hotApis);
         return ResultUtil.success(result);
     }
 

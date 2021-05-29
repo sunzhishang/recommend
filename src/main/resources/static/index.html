@@ -13,14 +13,14 @@
 
             $("#search-button").click(function () {
                 $("#list").empty();
-                let pageNo = 0;
-                retrieveArticles(pageNo)
+                $(window).unbind()
+                retrieveArticles()
             });
             $("#search-input").keypress(function (even) {
                 if (even.which === 13) {
                     $("#list").empty();
-                    let pageNo = 0;
-                    retrieveArticles(pageNo);
+                    $(window).unbind()
+                    retrieveArticles();
                 }
             });
 

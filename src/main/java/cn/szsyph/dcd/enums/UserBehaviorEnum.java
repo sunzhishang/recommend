@@ -15,9 +15,9 @@ public enum UserBehaviorEnum {
     PIN(5, "收藏", 5),
     COMMENT_SCORE_1(11, "评价-1分", -2),
     COMMENT_SCORE_2(12, "评价-2分", -1),
-    COMMENT_SCORE_3(13, "评价-3分", 1),
-    COMMENT_SCORE_4(14, "评价-4分", 2),
-    COMMENT_SCORE_5(15, "评价-5分", 3);
+    COMMENT_SCORE_3(13, "评价-3分", 3),
+    COMMENT_SCORE_4(14, "评价-4分", 4),
+    COMMENT_SCORE_5(15, "评价-5分", 5);
 
     /**
      * 行为码 对应数据库存储数值

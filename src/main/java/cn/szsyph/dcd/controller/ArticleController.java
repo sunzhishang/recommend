@@ -3,13 +3,11 @@ package cn.szsyph.dcd.controller;
 
 import cn.szsyph.dcd.common.ResultUtil;
 import cn.szsyph.dcd.common.ResultVo;
-import cn.szsyph.dcd.repository.domain.ArticleApi;
-import cn.szsyph.dcd.repository.domain.ArticleES;
-import cn.szsyph.dcd.repository.domain.User;
-import cn.szsyph.dcd.repository.domain.UserPin;
+import cn.szsyph.dcd.repository.domain.*;
 import cn.szsyph.dcd.service.ArticleService;
 import cn.szsyph.dcd.service.ESService.ArticleESService;
 import cn.szsyph.dcd.service.UserBehaviorService;
+import cn.szsyph.dcd.service.UserGradeService;
 import cn.szsyph.dcd.service.UserPinService;
 import cn.szsyph.dcd.util.SessionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +33,9 @@ public class ArticleController {
     private UserPinService userPinService;
 
     @Autowired
+    private UserGradeService userGradeService;
+
+    @Autowired
     private UserBehaviorService userBehaviorService;
 
     @Autowired
@@ -43,21 +44,23 @@ public class ArticleController {
     @GetMapping("/search")
     public ResultVo search(
             @RequestParam(name = "keywords") String keywords,
-            @RequestParam(name = "pageNo") Integer pageNo,
-            @RequestParam(name = "pageSize") Integer pageSize,
             HttpServletRequest request) {
         User user = sessionUtil.getUser(request);
-        List<ArticleES> search = articleESService.search(keywords, pageNo, pageSize);
-        userBehaviorService.searchArticles(user.getId(), search, pageNo, pageSize);
+        List<ArticleES> search = articleESService.search(keywords);
+        userBehaviorService.searchArticles(user.getId(), search);
 
         List<ArticleApi> result = new ArrayList<>();
         for (ArticleES articleES : search) {
             ArticleApi articleApi = new ArticleApi(articleES);
             articleApi.setIdStr(Long.toString(articleES.getId()));
             if (user.getId() != 0) {
-                UserPin userPinByUserIdAndArticleId = userPinService.getUserPinByUserIdAndArticleId(user.getId(), articleES.getId());
-                if (userPinByUserIdAndArticleId != null && userPinByUserIdAndArticleId.getArticleId() != 0) {
+                UserPin userPin = userPinService.getUserPinByUserIdAndArticleId(user.getId(), articleES.getId());
+                UserGrade userGrade = userGradeService.getUserGradeByUserIdAndArticleId(user.getId(), articleES.getId());
+                if (userPin != null && userPin.getArticleId() != 0) {
                     articleApi.setPined(true);
+                }
+                if (userGrade != null && userGrade.getArticleId() != 0) {
+                    articleApi.setGrade(userGrade.getGrade());
                 }
             }
             result.add(articleApi);

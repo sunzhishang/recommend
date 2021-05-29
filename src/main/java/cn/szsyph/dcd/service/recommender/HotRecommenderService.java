@@ -33,15 +33,6 @@ public class HotRecommenderService {
         List<Article> result = new ArrayList<>();
         for (Long id : articleIds) {
             Article articleById = articleService.getArticleById(id);
-            if (userId != 0) {
-                UserPin userPin = userPinDao.findByUserIdAndArticleId(userId, id);
-                if (userPin.getArticleId() != 0 && userPin.getUserId() != 0) {
-                    ArticleApi articleApi = new ArticleApi(articleById);
-                    articleApi.setPined(true);
-                    result.add(articleApi);
-                    continue;
-                }
-            }
             result.add(articleById);
         }
         return result;

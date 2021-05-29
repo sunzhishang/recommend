@@ -23,4 +23,6 @@ public class ArticleApi extends Article {
     private boolean isPined;
 
     private String idStr;
+
+    private int grade;
 }

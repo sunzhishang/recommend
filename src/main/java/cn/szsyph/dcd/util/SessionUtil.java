@@ -23,7 +23,7 @@ public class SessionUtil {
 
 
     public static void putUserId(HttpServletRequest request, Long userId) {
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(true);
         session.setAttribute("user_id", userId);
     }
 
@@ -31,12 +31,11 @@ public class SessionUtil {
      * 获取用户基本信息
      */
     public User getUser(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        Object user_id = session.getAttribute("user_id");
-        if (user_id == null) {
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("user_id") == null) {
             return new User();
         }
-        return userService.getUserById((Long) (user_id));
+        return userService.getUserById((Long) (session.getAttribute("user_id")));
 //        return new User(4, "sunzhishang", "123456");
     }
 }

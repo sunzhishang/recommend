@@ -2,11 +2,8 @@ package cn.szsyph.dcd.controller;
 
 import cn.szsyph.dcd.common.ResultUtil;
 import cn.szsyph.dcd.common.ResultVo;
-import cn.szsyph.dcd.constant.Constant;
-import cn.szsyph.dcd.repository.domain.Article;
-import cn.szsyph.dcd.repository.domain.ArticleApi;
-import cn.szsyph.dcd.repository.domain.User;
-import cn.szsyph.dcd.repository.domain.UserPin;
+import cn.szsyph.dcd.repository.domain.*;
+import cn.szsyph.dcd.service.UserGradeService;
 import cn.szsyph.dcd.service.UserPinService;
 import cn.szsyph.dcd.service.recommender.HotRecommenderService;
 import cn.szsyph.dcd.service.recommender.ItemBasedSchedulerService;
@@ -46,6 +43,9 @@ public class RecommendController {
     @Autowired
     private UserPinService userPinService;
 
+    @Autowired
+    private UserGradeService userGradeService;
+
     /**
      * 获取首页数据
      */
@@ -64,9 +64,13 @@ public class RecommendController {
                 ArticleApi articleApi = new ArticleApi(userBasedRecommend);
                 articleApi.setIdStr(Long.toString(userBasedRecommend.getId()));
                 if (user.getId() != 0) {
-                    UserPin userPinByUserIdAndArticleId = userPinService.getUserPinByUserIdAndArticleId(user.getId(), articleApi.getId());
-                    if (userPinByUserIdAndArticleId.getArticleId() != 0) {
+                    UserPin userPin = userPinService.getUserPinByUserIdAndArticleId(user.getId(), articleApi.getId());
+                    if (userPin != null && userPin.getArticleId() != 0) {
                         articleApi.setPined(true);
+                    }
+                    UserGrade userGrade = userGradeService.getUserGradeByUserIdAndArticleId(user.getId(), articleApi.getId());
+                    if (userGrade != null && userGrade.getArticleId() != 0) {
+                        articleApi.setGrade(userGrade.getGrade());
                     }
                 }
                 userBasedApis.add(articleApi);
@@ -81,8 +85,12 @@ public class RecommendController {
                 articleApi.setIdStr(Long.toString(hotRecommend.getId()));
                 if (user.getId() != 0) {
                     UserPin userPinByUserIdAndArticleId = userPinService.getUserPinByUserIdAndArticleId(user.getId(), articleApi.getId());
-                    if (userPinByUserIdAndArticleId.getArticleId() != 0) {
+                    if (userPinByUserIdAndArticleId != null && userPinByUserIdAndArticleId.getArticleId() != 0) {
                         articleApi.setPined(true);
+                    }
+                    UserGrade userGrade = userGradeService.getUserGradeByUserIdAndArticleId(user.getId(), articleApi.getId());
+                    if (userGrade != null && userGrade.getArticleId() != 0) {
+                        articleApi.setGrade(userGrade.getGrade());
                     }
                 }
                 hotApis.add(articleApi);

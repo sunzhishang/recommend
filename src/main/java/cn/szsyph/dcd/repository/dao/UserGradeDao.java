@@ -8,4 +8,6 @@ import java.util.List;
 public interface UserGradeDao extends JpaRepository<UserGrade, Long> {
 
     List<UserGrade> findByUserId(long userId);
+
+    UserGrade findByUserIdAndArticleId(long userId, long articleId);
 }

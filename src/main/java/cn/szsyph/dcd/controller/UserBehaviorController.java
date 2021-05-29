@@ -35,6 +35,9 @@ public class UserBehaviorController {
             return ResultUtil.error(ErrorEnum.PARAM_ILLEGAL);
         }
         User user = sessionUtil.getUser(request);
+        if (user.getId() == 0) {
+            return ResultUtil.error(ErrorEnum.NO_USER);
+        }
         userBehaviorService.clickArticle(user.getId(), articleId);
         return ResultUtil.success();
     }
@@ -42,25 +45,43 @@ public class UserBehaviorController {
     @GetMapping(value = "/grade")
     public ResultVo grade(@RequestParam(value = "article_id") long articleId,
                           @RequestParam(value = "grade") int grade, HttpServletRequest request) {
-        log.info("MicroscopeController#report: request log. articleId=[{}]", articleId);
         if (articleId <= 0) {
-            log.error("MicroscopeController#click: param is illegal. articleId={}", articleId);
+            log.error("MicroscopeController#grade: param is illegal. articleId={}", articleId);
             return ResultUtil.error(ErrorEnum.PARAM_ILLEGAL);
         }
         User user = sessionUtil.getUser(request);
+        if (user.getId() == 0) {
+            return ResultUtil.error(ErrorEnum.NO_USER);
+        }
         userBehaviorService.gradeArticle(user.getId(), articleId,grade);
         return ResultUtil.success();
     }
 
     @GetMapping(value = "/pin")
     public ResultVo pin(@RequestParam(value = "article_id") long articleId, HttpServletRequest request) {
-        log.info("MicroscopeController#pin: request log. articleId=[{}]", articleId);
         if (articleId <= 0) {
-            log.error("MicroscopeController#click: param is illegal. articleId={}", articleId);
+            log.error("MicroscopeController#pin: param is illegal. articleId={}", articleId);
             return ResultUtil.error(ErrorEnum.PARAM_ILLEGAL);
         }
         User user = sessionUtil.getUser(request);
+        if (user.getId() == 0) {
+            return ResultUtil.error(ErrorEnum.NO_USER);
+        }
         userBehaviorService.pinArticle(user.getId(), articleId);
+        return ResultUtil.success();
+    }
+
+    @GetMapping(value = "/cancel_pin")
+    public ResultVo cancelPin(@RequestParam(value = "article_id") long articleId, HttpServletRequest request) {
+        if (articleId == 0) {
+            log.error("MicroscopeController#cancel_pin: param is illegal. articleId={}", articleId);
+            return ResultUtil.error(ErrorEnum.PARAM_ILLEGAL);
+        }
+        User user = sessionUtil.getUser(request);
+        if (user.getId() == 0) {
+            return ResultUtil.error(ErrorEnum.NO_USER);
+        }
+        userBehaviorService.cancelPinArticle(user.getId(), articleId);
         return ResultUtil.success();
     }
 

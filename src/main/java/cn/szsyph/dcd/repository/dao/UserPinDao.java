@@ -15,5 +15,7 @@ public interface UserPinDao extends org.springframework.data.jpa.repository.JpaR
 
     List<UserPin> findByUserId(long userId);
 
+    void deleteByUserIdAndArticleId(long userId, long articleId);
+
     UserPin findByUserIdAndArticleId(long userId, long articleId);
 }

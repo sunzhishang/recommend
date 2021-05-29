@@ -36,9 +36,9 @@ public class ArticleESService {
         return "success";
     }
 
-    public List<ArticleES> search(String keywords, int pageNo, int pageSize) {
+    public List<ArticleES> search(String keywords) {
         List<ArticleES> articles = new ArrayList<>();
-        List<SearchHit<ArticleES>> hits = articleESDao.findByTitle(keywords, PageRequest.of(pageNo, pageSize));
+        List<SearchHit<ArticleES>> hits = articleESDao.findByTitle(keywords);
         for (SearchHit<ArticleES> hit : hits) {
             ArticleES content = hit.getContent();
             content.setTitle(hit.getHighlightField("title").get(0));

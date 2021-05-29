@@ -1,16 +1,18 @@
-.header{
-    margin-left:250px;
-    margin-right:50px;
+.header {
+    margin-left: 250px;
+    margin-right: 50px;
     /*margin-top:200px;*/
 }
-.dcdImg{
-    position:absolute;
+
+.dcdImg {
+    position: absolute;
     left: 250px;
     top: 16px;
     width: 246px;
     height: 100px;
 }
-.input-div{
+
+.input-div {
     margin-left: 260px;
     border-radius: 2px;
     position: relative;
@@ -20,7 +22,8 @@
     border: 2px solid rgb(255, 204, 50);
     height: 44px;
 }
-.input{
+
+.input {
     width: 284px;
     height: 40px;
     line-height: 12px;
@@ -32,7 +35,8 @@
     appearance: none;
     float: left;
 }
-.button{
+
+.button {
     line-height: 38px;
     font-size: 14px;
     border: 0;
@@ -43,6 +47,7 @@
     width: 80px;
     border-radius: 0;
 }
+
 .black-bar {
     background-color: #15361b;
     height: 43px;
@@ -52,18 +57,22 @@
     padding-left: 100px;
     margin-top: 8px;
 }
+
 .header a {
     text-decoration: none;
     color: #ffffff;
 }
+
 .homeTab {
     margin-left: 220px;
     font-size: 22px;
 }
+
 .videoTab {
     margin-left: 100px;
     font-size: 22px;
 }
+
 .myTab {
     margin-left: 210px;
     font-size: 22px;

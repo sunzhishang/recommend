@@ -8,6 +8,7 @@ import cn.szsyph.dcd.repository.dao.UserPinDao;
 import cn.szsyph.dcd.repository.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,11 +62,10 @@ public class UserBehaviorService {
         }
     }
 
-    public void searchArticles(long userId, List<ArticleES> articleIdList, int pageNo, int pageSize) {
-        int searchOffset = pageNo * pageSize;
+    public void searchArticles(long userId, List<ArticleES> articleIdList) {
+
         for (int i = 0; i < articleIdList.size(); i++) {
-            int searchRanking = searchOffset + i + 1;
-            double score = 5 / (double) searchRanking;
+            double score = 5 / (double) (i + 1);
             recommendRankingArticleService.pushRanking(articleIdList.get(i).getId(), score);
             if (userId != 0) {
                 userPreferenceService.saveOrUpdateUserPreference(userId, articleIdList.get(i).getId(), score);
@@ -83,13 +83,9 @@ public class UserBehaviorService {
         return articleService.getArticleByIds(articleIds);
     }
 
-    public List<Article> getGradedArticleByUserId(long userId) {
-        List<UserGrade> byUserId = userGradeDao.findByUserId(userId);
-        List<Long> articleIds = new ArrayList<>();
-        for (UserGrade userGrade : byUserId) {
-            articleIds.add(userGrade.getArticleId());
-        }
-        return articleService.getArticleByIds(articleIds);
+    public List<UserGrade> getGradedArticleByUserId(long userId) {
+        return userGradeDao.findByUserId(userId);
+
     }
 
     public List<Article> getClickedArticleByUserId(long userId) {
@@ -101,5 +97,8 @@ public class UserBehaviorService {
         return articleService.getArticleByIds(articleIds);
     }
 
-
+    @Transactional
+    public void cancelPinArticle(long userId, long articleId) {
+        userPinDao.deleteByUserIdAndArticleId(userId, articleId);
+    }
 }
